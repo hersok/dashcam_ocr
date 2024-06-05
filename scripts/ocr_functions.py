@@ -240,6 +240,6 @@ def write_dataframe_to_file(df: pl.DataFrame, output_dir = "output/", file_name 
     df.write_csv(f"{output_dir}/{file_name}")
 
 if __name__ == "__main__":
-    data_df = all_directories_to_dataframe("frames/")
-    write_dataframe_to_file(data_df, "output/", "dashcam.csv")
+    data_df = all_directories_to_dataframe("../frames/")
+    write_dataframe_to_file(data_df, "../output/", "dashcam.csv")
     print(data_df)

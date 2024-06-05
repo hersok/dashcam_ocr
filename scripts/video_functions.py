@@ -61,7 +61,7 @@ def frame_extractor_loop(file_name: str, frequency: int, x: int, y: int, width: 
 
     # loop through video
     for i in range(0, length_in_seconds, frequency):
-        frame_extractor(file_name, i, x, y, width, height, frame_type, "frames")
+        frame_extractor(file_name, i, x, y, width, height, frame_type, "../frames")
 
 
 def region_of_interest_finder(file_name: str, time_offset: float, screen_size_ratio: float, selection_type: str):
@@ -152,5 +152,5 @@ def directory_frame_extractor(input_dir: str, frequency: int, time_offset = 25, 
 
 
 if __name__ == "__main__":
-    directory_frame_extractor("videos/", 3, 25, 0.5)
+    directory_frame_extractor("../videos/", 3, 25, 0.5)
 

@@ -30,7 +30,7 @@ def clean_dataframe(df: pl.DataFrame) -> pl.DataFrame:
     )
 
     # save the dataframe to file
-    write_dataframe_to_file(df, "output/", "filtered_dashcam.csv")
+    write_dataframe_to_file(df, "../output/", "filtered_dashcam.csv")
 
     # return the dataframe
     return df
@@ -89,4 +89,4 @@ def create_map(df: pl.DataFrame, output_dir = "output/"):
 if __name__ == "__main__":
     df = pl.read_csv("output/dashcam.csv")
     df = clean_dataframe(df)
-    create_map(df, "output/")
+    create_map(df, "../output/")

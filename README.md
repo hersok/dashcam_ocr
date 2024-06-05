@@ -55,7 +55,7 @@ Please see the screenshot below of the interactive map found under the `output` 
 
 * OpenCV
   * Frame extraction
-  * Regional extraction
+  * Region-of-Interest (ROI) extraction
   * OCR preprocessing:
     * Otsu's thresholding method
     * MedianBlur
@@ -63,6 +63,6 @@ Please see the screenshot below of the interactive map found under the `output` 
 * RegEx
 * pyTesseract OCR
   * Image-to-text detection
-* polars DataFrames
+* Polars DataFrames
   * Dataframe filtering and joining
 * Folium geo-coordinate mapping

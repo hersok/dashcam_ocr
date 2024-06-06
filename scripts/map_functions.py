@@ -13,20 +13,49 @@ def clean_dataframe(df: pl.DataFrame) -> pl.DataFrame:
     df = df.with_columns(pl.Series(name="new_index", values=range(0, interval * df.height, interval)))
     df = df.drop("frame_delta").drop("frame_index")
 
+    df = df.filter(pl.col("latitude") != 0)
+    df = df.filter(abs(pl.col("latitude")) <= 90)
+    df = df.filter(abs(pl.col("longitude")) <= 180)
+
     # filter out extraneous lat, lon coords
     # the OCR operation interpreted some latitudes as 34.1 etc., which is out of the 30.4 to 31.1 range
     latitude_mean = df["latitude"].mean()
     latitude_std = df["latitude"].std()
-    std_threshold = 0.5
+    std_threshold = 2
+    speed_std_threshold = 3
     longitude_mean = df["longitude"].mean()
     longitude_std = df["longitude"].std()
+    speed_mean = df["speed"].mean()
+    speed_std = df["speed"].std()
     df = df.filter(
-        (df["latitude"] >= latitude_mean - std_threshold * latitude_std) &
-        (df["latitude"] <= latitude_mean + std_threshold * latitude_std)
+        (abs(df["latitude"]) >= abs(latitude_mean) - std_threshold * latitude_std) &
+        (abs(df["latitude"]) <= abs(latitude_mean) + std_threshold * latitude_std)
     )
     df = df.filter(
-        (df["longitude"] >= longitude_mean - std_threshold * longitude_std) &
-        (df["longitude"] <= longitude_mean + std_threshold * longitude_std)
+        (abs(df["longitude"]) >= abs(longitude_mean) - std_threshold * longitude_std) &
+        (abs(df["longitude"]) <= abs(longitude_mean) + std_threshold * longitude_std)
+    )
+    df = df.filter(
+        (abs(df["speed"]) >= abs(speed_mean) - speed_std_threshold * speed_std) &
+        (abs(df["speed"]) <= abs(speed_mean) + speed_std_threshold * speed_std)
+    )
+
+    # A second geocoord filtering method
+    # This filtering stage keeps track of the differences between coordinates
+    # If a coordinate varies drastically from its predecessor, it gets filtered out.
+    df = df.with_columns(pl.col("latitude").diff().fill_null(0).alias("lat_delta"))
+    df = df.with_columns(pl.col("longitude").diff().fill_null(0).alias("lon_delta"))
+    latitude_diff_mean = df["lat_delta"].mean()
+    latitude_diff_std = df["lat_delta"].std()
+    longitude_diff_mean = df["lon_delta"].mean()
+    longitude_diff_std = df["lon_delta"].std()
+    df = df.filter(
+        (abs(df["lat_delta"]) >= abs(latitude_diff_mean) - std_threshold * latitude_diff_std) &
+        (abs(df["lat_delta"]) <= abs(latitude_diff_mean) + std_threshold * latitude_diff_std)
+    )
+    df = df.filter(
+        (abs(df["lon_delta"]) >= abs(longitude_diff_mean) - std_threshold * longitude_diff_std) &
+        (abs(df["lon_delta"]) <= abs(longitude_diff_mean) + std_threshold * longitude_diff_std)
     )
 
     # save the dataframe to file

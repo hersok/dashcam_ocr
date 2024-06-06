@@ -131,19 +131,22 @@ def directory_frame_extractor(input_dir: str, frequency: int, time_offset = 25, 
 
     files = os.listdir(input_dir)
     assert len(files) > 0, "Error: directory is empty"
-    print(files[0])
+    regex_video_pattern = re.compile(r'\.(mp4|.mkv|.mov)$', re.IGNORECASE)
+    video_files = [f for f in files if regex_video_pattern.search(f)]
+
+    assert len(video_files) > 0, "Provided directory does not contain any images"
 
     # prompt user to select a GPS ROI
     # gps_roi = (x, y, width, height)
-    gps_roi = region_of_interest_finder(f"{input_dir}/{files[0]}", time_offset, screen_size_ratio, "gps")
+    gps_roi = region_of_interest_finder(f"{input_dir}/{video_files[0]}", time_offset, screen_size_ratio, "gps")
 
     # prompt user to select a speed ROI
-    speed_roi = region_of_interest_finder(f"{input_dir}/{files[0]}", time_offset, screen_size_ratio, "speed")
+    speed_roi = region_of_interest_finder(f"{input_dir}/{video_files[0]}", time_offset, screen_size_ratio, "speed")
 
     # prompt user to select a time ROI
-    time_roi = region_of_interest_finder(f"{input_dir}/{files[0]}", time_offset, screen_size_ratio, "time")
+    time_roi = region_of_interest_finder(f"{input_dir}/{video_files[0]}", time_offset, screen_size_ratio, "time")
 
-    for video_name in files:
+    for video_name in video_files:
         frame_extractor_loop(f"{input_dir}/{video_name}", frequency, gps_roi[0], gps_roi[1], gps_roi[2], gps_roi[3], "gps")
         frame_extractor_loop(f"{input_dir}/{video_name}", frequency, speed_roi[0], speed_roi[1], speed_roi[2], speed_roi[3], "speed")
         frame_extractor_loop(f"{input_dir}/{video_name}", frequency, time_roi[0], time_roi[1], time_roi[2], time_roi[3], "time")

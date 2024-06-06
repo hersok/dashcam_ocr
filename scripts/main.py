@@ -13,6 +13,6 @@ if __name__ == '__main__':
     print(data_df)
 
     # create the map
-    df = pl.read_csv("output/dashcam.csv")
+    df = pl.read_csv("../output/dashcam.csv")
     df = map.clean_dataframe(df)
     map.create_map(df, "../output/")

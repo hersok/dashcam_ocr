@@ -106,7 +106,7 @@ def text_to_coordinates(coord_string: str) -> dict[str, float]:
     :return: tuple[float, float]
     """
     # N40.426786 W97 .665820 = (N)(40)(.)(426786) (W)(97)( .)(665820)
-    regex_coord_pattern = re.compile(r'([NS])\s*(\d+)(\s*\.\s*)(\d+)\s*([EW])\s*(\d+)(\s*\.\s*)(\d+)')
+    regex_coord_pattern = re.compile(r'([NS])\D*(\d+)(\s*\.\s*)(\d+)\s*([EW])\D*(\d+)(\s*\.\s*)(\d+)')
     regex_match = regex_coord_pattern.search(coord_string)
     if not regex_match:
         return {'latitude': 0.0, 'longitude': 0.0}
@@ -125,7 +125,7 @@ def text_to_timestamp(timestamp_string: str) -> str:
     :return: str
     """
     # Example: "08-04-2024 11:  04 :13" = (08)-(04)-(2024) (11):  (04) :(13) = (08)-(04)-(2024) (11):(04):(13)
-    regex_timestamp_pattern = re.compile(r'(\d{2})\D?(\d{2})\D?(\d{4})\s(\d{2})\D?(\d{2})\s?\D?(\d{2})')
+    regex_timestamp_pattern = re.compile(r'(\d{2})\D*(\d{2})\D*(\d{4})\s*(\d{2})\D*(\d{2})\s*\D*(\d{2})')
     regex_match = regex_timestamp_pattern.search(timestamp_string)
     if not regex_match:
         return timestamp_string

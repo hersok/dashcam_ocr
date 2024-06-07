@@ -57,7 +57,7 @@ def image_directory_to_dict(input_dir: str):
     regex_suffix_pattern = re.compile(r'\D*(\d+)\D*')
     # Example: frame_1.jpg = frame_(1).jpg
     regex_image_pattern = re.compile(r'\.(jpg|jpeg|png)$', re.IGNORECASE)
-    regex_directory_pattern = re.compile(r'\.\./(frames)/(\S*)/(\D*)')
+    regex_directory_pattern = re.compile(r'\S*/*(frames)/(\S*)/(time|gps|speed)')
     # Example: ../frames/010243F/time = ../(frames)/(010243F)/(time)
 
     # list all files in the directory:

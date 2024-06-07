@@ -1,6 +1,6 @@
-import ocr_functions as ocr
-import map_functions as map
-import video_functions as vid
+import scripts.ocr_functions as ocr
+import scripts.map_functions as map
+import scripts.video_functions as vid
 import polars as pl
 
 if __name__ == '__main__':

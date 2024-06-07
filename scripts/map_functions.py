@@ -3,7 +3,7 @@ import os
 import polars as pl
 import folium as fl
 import branca.colormap as cm
-from ocr_functions import write_dataframe_to_file
+from scripts.ocr_functions import write_dataframe_to_file
 
 def clean_dataframe(df: pl.DataFrame) -> pl.DataFrame:
 
@@ -49,13 +49,14 @@ def clean_dataframe(df: pl.DataFrame) -> pl.DataFrame:
     latitude_diff_std = df["lat_delta"].std()
     longitude_diff_mean = df["lon_delta"].mean()
     longitude_diff_std = df["lon_delta"].std()
+    # the multiplier was added in to not penalize small sample sizes: (1 + 100 / df.height)
     df = df.filter(
-        (abs(df["lat_delta"]) >= abs(latitude_diff_mean) - std_threshold * latitude_diff_std) &
-        (abs(df["lat_delta"]) <= abs(latitude_diff_mean) + std_threshold * latitude_diff_std)
+        (abs(df["lat_delta"]) >= abs(latitude_diff_mean) - std_threshold * (1 + 100 / df.height) * latitude_diff_std) &
+        (abs(df["lat_delta"]) <= abs(latitude_diff_mean) + std_threshold * (1 + 100 / df.height) * latitude_diff_std)
     )
     df = df.filter(
-        (abs(df["lon_delta"]) >= abs(longitude_diff_mean) - std_threshold * longitude_diff_std) &
-        (abs(df["lon_delta"]) <= abs(longitude_diff_mean) + std_threshold * longitude_diff_std)
+        (abs(df["lon_delta"]) >= abs(longitude_diff_mean) - std_threshold * (1 + 100 / df.height) * longitude_diff_std) &
+        (abs(df["lon_delta"]) <= abs(longitude_diff_mean) + std_threshold * (1 + 100 / df.height) * longitude_diff_std)
     )
 
     # save the dataframe to file
